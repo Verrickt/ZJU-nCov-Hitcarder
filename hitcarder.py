@@ -2,6 +2,7 @@
 import requests, json, re
 import time, datetime, os
 import getpass
+from random import randint
 from halo import Halo
 from apscheduler.schedulers.blocking import BlockingScheduler
 
@@ -181,8 +182,10 @@ if __name__ == "__main__":
 
     # Schedule task
     scheduler = BlockingScheduler()
-    scheduler.add_job(main, 'cron', args=[username, password], hour=hour, minute=minute)
-    print('⏰ 已启动定时程序，每天 %02d:%02d 为您打卡' % (int(hour), int(minute)))
+    scheduled_hour = str(int(hour)+randint(-1,1))
+    scheduled_minute = str(int(minute)+randint(-10,30))
+    scheduler.add_job(main, 'cron', args=[username, password], hour=scheduled_hour, minute=scheduled_minute)
+    print('⏰ 已启动定时程序，下次打卡时间为 %02d:%02d' % (int(scheduled_hour), int(scheduled_minute)))
     print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
 
     try:
